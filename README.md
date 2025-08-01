@@ -39,8 +39,6 @@ In your root-level `settings.gradle.kts`:
 ```kotlin
 dependencyResolutionManagement {
     repositories {
-        google()
-        mavenCentral()
         maven { url = uri("https://jitpack.io") }
     }
 }
