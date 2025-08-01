@@ -13,7 +13,6 @@ Built for real-world apps where **authentication reliability is non-negotiable**
 
 ---
 
-
 ## 🚀 Key Features
 
 - ✅ Seamless integration with AndroidX Biometric APIs
