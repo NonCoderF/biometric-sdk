@@ -10,7 +10,6 @@ This SDK simplifies AndroidX biometric integration with modern Kotlin practices,
 - Device Credential fallback (PIN/Pattern/Password)
 
 Built for real-world apps where **authentication reliability is non-negotiable**.
-
 ---
 ## 🚀 Key Features
 
