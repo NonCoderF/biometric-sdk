@@ -53,7 +53,7 @@ dependencyResolutionManagement {
 In your **module-level** `build.gradle.kts`:
 
 ```kotlin
-implementation("com.github.NoNCoderF:BiometricSDK:1.0.0")
+implementation("com.github.NoNCoderF:biometric-sdk:1.0.0")
 ```
 
 ---
