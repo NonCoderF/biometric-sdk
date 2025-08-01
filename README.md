@@ -56,8 +56,6 @@ In your **module-level** `build.gradle.kts`:
 implementation("com.github.NoNCoderF:BiometricSDK:1.0.0")
 ```
 
-> Replace `NoNCoderF` with your GitHub username and `1.0.0` with the latest release tag.
-
 ---
 
 ## 🧑‍💻 Usage Guide
