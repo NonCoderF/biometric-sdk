@@ -174,7 +174,7 @@ abstract class BaseBiometricActivity : AppCompatActivity() {
                 // Biometric is turned off or bypassed manually
             }
             BiometricDecision.PROMPT_SKIPPED -> {
-                // App not in foreground, or biometric not required in this state
+                // App in foreground, biometric not required in this state
             }
             BiometricDecision.SECURITY_NOT_PRESENT -> {
                 // Device doesn't support biometric OR no credential fallback
