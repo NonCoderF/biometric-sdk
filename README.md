@@ -83,11 +83,11 @@ private val biometricAuthenticator: BiometricAuthenticator by lazy {
         biometricManager,
         object : BiometricAuthenticatorCallback{
             override fun onBiometricSuccess() {
-                //Proceed onSuccess
+                //onSuccess
             }
 
-            override fun onBiometricFailure() {
-                //Proceed onFailure (Cancelled by user)
+            override fun onBiometricFailure(errorCode: Int, errString: CharSequence) {
+                //onFailure
             }
 
         }
@@ -164,11 +164,11 @@ abstract class BaseBiometricActivity : AppCompatActivity() {
             biometricManager,
             object : BiometricAuthenticatorCallback{
                 override fun onBiometricSuccess() {
-                    //Proceed onSuccess
+                    //onSuccess
                 }
 
-                override fun onBiometricFailure() {
-                    //Proceed onFailure (Cancelled by user)
+                override fun onBiometricFailure(errorCode: Int, errString: CharSequence) {
+                    //onFailure
                 }
 
             }

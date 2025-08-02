@@ -20,7 +20,7 @@ interface MyBiometricManagerInterface {
 
 interface BiometricCallback {
     fun onUnlocked()
-    fun onUnlockError()
+    fun onUnlockError(errorCode: Int, errString: CharSequence)
 }
 
 open class MyBiometricManagerImpl(
@@ -80,7 +80,7 @@ open class MyBiometricManagerImpl(
             }
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                biometricCallback?.onUnlockError()
+                biometricCallback?.onUnlockError(errorCode, errString)
             }
         })
     }

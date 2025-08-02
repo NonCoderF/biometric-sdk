@@ -9,7 +9,7 @@ interface BiometricAuthenticator {
 
 interface BiometricAuthenticatorCallback{
     fun onBiometricSuccess()
-    fun onBiometricFailure()
+    fun onBiometricFailure(errorCode: Int, errString: CharSequence)
 }
 
 open class BiometricAuthenticatorImpl(
@@ -23,8 +23,8 @@ open class BiometricAuthenticatorImpl(
                 biometricAuthenticatorCallback.onBiometricSuccess()
             }
 
-            override fun onUnlockError() {
-                biometricAuthenticatorCallback.onBiometricFailure()
+            override fun onUnlockError(errorCode: Int, errString: CharSequence) {
+                biometricAuthenticatorCallback.onBiometricFailure(errorCode, errString)
             }
         })
         biometricManager.triggerBiometricPrompt()
