@@ -95,21 +95,22 @@ private val biometricAuthHandler: BiometricAuthHandler by lazy {
 
 //On user action
 // Evaluate biometric flow dynamically
-when (biometricAuthHandler.evaluate()) {
-    BiometricDecision.BYPASS -> {
-        // Biometric is turned off or bypassed manually
-    }
-    BiometricDecision.PROMPT_SKIPPED -> {
-        // App not in foreground, or biometric not required in this state
-    }
-    BiometricDecision.SECURITY_NOT_PRESENT -> {
-        // Device doesn't support biometric OR no credential fallback
-    }
-    BiometricDecision.SETUP_REQUIRED -> {
-        // Biometric is supported but user hasn't enrolled — suggest settings intent
-    }
-    BiometricDecision.AUTHENTICATE -> {
-        biometricAuthenticator.authenticate()
+fun onClick() {
+    //Reset the prompt controller
+    BiometricPromptController.resetBiometricFlag()
+    when (biometricAuthHandler.evaluate()) {
+        BiometricDecision.BYPASS -> {
+            // Biometric is turned off or bypassed manually
+        }
+        BiometricDecision.SECURITY_NOT_PRESENT -> {
+            // Device doesn't support biometric OR no credential fallback
+        }
+        BiometricDecision.SETUP_REQUIRED -> {
+            // Biometric is supported but user hasn't enrolled — suggest settings intent
+        }
+        BiometricDecision.AUTHENTICATE -> {
+            biometricAuthenticator.authenticate()
+        }
     }
 }
 
