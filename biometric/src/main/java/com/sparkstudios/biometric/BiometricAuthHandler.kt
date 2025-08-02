@@ -14,7 +14,7 @@ enum class BiometricDecision {
     AUTHENTICATE
 }
 
-class BiometricAuthHandler(
+open class BiometricAuthHandler(
     private val biometricAuthenticator: BiometricAuthenticator,
     private val requirement: () -> AuthenticationRequirement,
     private val bypass: () -> Boolean,

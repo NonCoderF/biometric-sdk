@@ -12,7 +12,7 @@ interface BiometricAuthenticatorCallback{
     fun onBiometricFailure()
 }
 
-class BiometricAuthenticatorImpl(
+open class BiometricAuthenticatorImpl(
     private val biometricManager: MyBiometricManagerInterface,
     private val biometricAuthenticatorCallback: BiometricAuthenticatorCallback
 ) : BiometricAuthenticator {

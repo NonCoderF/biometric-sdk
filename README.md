@@ -16,7 +16,7 @@ Built for real-world apps where **authentication reliability is non-negotiable**
 - ✅ Seamless integration with AndroidX Biometric APIs
 - ✅ Supports Fingerprint, Face, and Device Credential fallback
 - ✅ Designed for fintech, banking, and high-trust apps
-- ✅ `MANDATORY`, `OPTIONAL`, `BYPASSABLE` auth modes
+- ✅ `NOT_ENABLED`, `ENABLED_AND_MANDATORY`, `ENABLED_BUT_NOT_MANDATORY` auth modes
 - ✅ Lifecycle-safe: no biometric prompts while app is backgrounded
 - ✅ Clean Kotlin interfaces — easy to test with MockK
 - ✅ Pluggable, SDK-ready structure — ideal for JitPack/Maven distribution
@@ -68,22 +68,47 @@ Biometric is triggered manually when the user takes a high-trust action.
 #### ✅ Example: Trigger Auth Before Showing Profile
 
 ```kotlin
-BiometricAuthenticatorImpl(
-    biometricManager = MyBiometricManagerImpl(
-        activity = this,
-        title = "Verify Identity",
-        subtitle = "Please authenticate to continue"
-    ),
-    callback = object : BiometricAuthenticatorCallback {
-        override fun onBiometricSuccess() {
-            // Proceed to sensitive content
-        }
+private val biometricAuthenticator: BiometricAuthenticator by lazy {
+    val biometricManager = MyBiometricManagerImpl(
+        this,
+        "Unlock",
+        "Unlock to use the app"
+    )
 
-        override fun onBiometricFailure() {
-            // Show retry / fallback UI
-        }
+    BiometricAuthenticatorImpl(
+        biometricManager,
+        this
+    )
+}
+
+private val biometricAuthHandler: BiometricAuthHandler by lazy {
+    BiometricAuthHandler(
+        biometricAuthenticator = biometricAuthenticator,
+        requirement = { AuthenticationRequirement.ENABLED_AND_MANDATORY },
+        bypass = { false },
+    )
+}
+
+//On user action
+// Evaluate biometric flow dynamically
+when (biometricAuthHandler.evaluate()) {
+    BiometricDecision.BYPASS -> {
+        // Biometric is turned off or bypassed manually
     }
-).authenticate()
+    BiometricDecision.PROMPT_SKIPPED -> {
+        // App not in foreground, or biometric not required in this state
+    }
+    BiometricDecision.SECURITY_NOT_PRESENT -> {
+        // Device doesn't support biometric OR no credential fallback
+    }
+    BiometricDecision.SETUP_REQUIRED -> {
+        // Biometric is supported but user hasn't enrolled — suggest settings intent
+    }
+    BiometricDecision.AUTHENTICATE -> {
+        biometricAuthenticator.authenticate()
+    }
+}
+
 ```
 
 ---
@@ -114,26 +139,47 @@ override fun onCreate() {
 ```kotlin
 abstract class BaseBiometricActivity : AppCompatActivity() {
 
+    private val biometricAuthenticator: BiometricAuthenticator by lazy {
+        val biometricManager = MyBiometricManagerImpl(
+            this,
+            "Unlock",
+            "Unlock to use the app"
+        )
+
+        BiometricAuthenticatorImpl(
+            biometricManager,
+            this
+        )
+    }
+
+    private val biometricAuthHandler: BiometricAuthHandler by lazy {
+        BiometricAuthHandler(
+            biometricAuthenticator = biometricAuthenticator,
+            requirement = { AuthenticationRequirement.ENABLED_AND_MANDATORY },
+            bypass = { false },
+        )
+    }
+
     override fun onResume() {
         super.onResume()
 
-        if (AppVisibilityTracker.isAppVisible) {
-            BiometricAuthenticatorImpl(
-                biometricManager = MyBiometricManagerImpl(
-                    activity = this,
-                    title = "Unlock App",
-                    subtitle = "Please authenticate"
-                ),
-                callback = object : BiometricAuthenticatorCallback {
-                    override fun onBiometricSuccess() {
-                        // Authenticated ✅
-                    }
-
-                    override fun onBiometricFailure() {
-                        // Access denied / fallback
-                    }
-                }
-            ).authenticate()
+        // Evaluate biometric flow dynamically
+        when (biometricAuthHandler.evaluate()) {
+            BiometricDecision.BYPASS -> {
+                // Biometric is turned off or bypassed manually
+            }
+            BiometricDecision.PROMPT_SKIPPED -> {
+                // App not in foreground, or biometric not required in this state
+            }
+            BiometricDecision.SECURITY_NOT_PRESENT -> {
+                // Device doesn't support biometric OR no credential fallback
+            }
+            BiometricDecision.SETUP_REQUIRED -> {
+                // Biometric is supported but user hasn't enrolled — suggest settings intent
+            }
+            BiometricDecision.AUTHENTICATE -> {
+                biometricAuthenticator.authenticate()
+            }
         }
     }
 }
@@ -145,20 +191,6 @@ Then extend it across your app:
 class DashboardActivity : BaseBiometricActivity()
 ```
 
----
-
-### ⚙️ Optional: Use `AuthMode` for Customizable Flow
-
-```kotlin
-when (BiometricAuthHandler.AuthMode.MANDATORY) {
-    MANDATORY -> biometric.authenticate()
-    OPTIONAL  -> showPromptOrSkip()
-    BYPASSABLE -> skipAuthentication()
-}
-```
-
----
-
 ### 🧭 Use Case Table
 
 | Use Case                             | Recommended Mode                |
@@ -166,7 +198,6 @@ when (BiometricAuthHandler.AuthMode.MANDATORY) {
 | Secure a settings/profile page       | 🔐 Identity Protection (Mode 1)  |
 | Authenticate before money transfer   | 💳 Transaction-Level (Mode 2)    |
 | Lock every screen or session         | 💳 Transaction-Level (Mode 2)    |
-| Let user choose to skip biometric    | Use with `OPTIONAL` / `BYPASSABLE` |
 
 ---
 
@@ -177,7 +208,7 @@ when (BiometricAuthHandler.AuthMode.MANDATORY) {
 ## 🧪 Testing
 
 - 🔍 Built for testability using dependency injection
-- ✅ Easily mock `BiometricAuthenticatorCallback` with [MockK](https://mockk.io)
+- ✅ Easily mock `BiometricAuthenticator` with [MockK](https://mockk.io)
 - 🧼 `AppVisibilityTracker` is stateless and safe to test
 
 ## 📜 License

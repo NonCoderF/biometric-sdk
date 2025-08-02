@@ -23,7 +23,7 @@ interface BiometricCallback {
     fun onUnlockError()
 }
 
-class MyBiometricManagerImpl(
+open class MyBiometricManagerImpl(
     activity: AppCompatActivity,
     title: String,
     subtitle: String
