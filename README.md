@@ -74,14 +74,23 @@ Biometric is triggered manually when the user takes a high-trust action.
 ```kotlin
 private val biometricAuthenticator: BiometricAuthenticator by lazy {
     val biometricManager = MyBiometricManagerImpl(
-        this,
+        this, //AppCompatActivity
         "Unlock",
         "Unlock to use the app"
     )
 
     BiometricAuthenticatorImpl(
         biometricManager,
-        this
+        object : BiometricAuthenticatorCallback{
+            override fun onBiometricSuccess() {
+                //Proceed onSuccess
+            }
+
+            override fun onBiometricFailure() {
+                //Proceed onFailure (Cancelled by user)
+            }
+
+        }
     )
 }
 
@@ -146,14 +155,23 @@ abstract class BaseBiometricActivity : AppCompatActivity() {
 
     private val biometricAuthenticator: BiometricAuthenticator by lazy {
         val biometricManager = MyBiometricManagerImpl(
-            this,
+            this, //AppCompatActivity
             "Unlock",
             "Unlock to use the app"
         )
 
         BiometricAuthenticatorImpl(
             biometricManager,
-            this
+            object : BiometricAuthenticatorCallback{
+                override fun onBiometricSuccess() {
+                    //Proceed onSuccess
+                }
+
+                override fun onBiometricFailure() {
+                    //Proceed onFailure (Cancelled by user)
+                }
+
+            }
         )
     }
 
