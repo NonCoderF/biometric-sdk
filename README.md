@@ -1,5 +1,9 @@
 # 🔐 Biometric SDK for Android
 
+[![](https://jitpack.io/v/NoNCoderF/biometric-sdk.svg)](https://jitpack.io/#NoNCoderF/biometric-sdk)
+![License](https://img.shields.io/github/license/NoNCoderF/biometric-sdk)
+
+
 **A production-grade biometric authentication SDK designed for apps that demand trust.**  
 Ideal for fintech, banking, e-wallets, secure messaging, parental control, or any app requiring **identity protection** and **transaction-level security**.
 
@@ -48,7 +52,7 @@ dependencyResolutionManagement {
 In your **module-level** `build.gradle.kts`:
 
 ```kotlin
-implementation("com.github.NoNCoderF:biometric-sdk:1.0.0")
+implementation("com.github.NoNCoderF:biometric-sdk:v1.0.0")
 ```
 
 ---
